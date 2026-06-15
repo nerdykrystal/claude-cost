@@ -1,0 +1,71 @@
+{
+  "version": "2026-04-22",
+  "updated": "2026-04-22",
+  "models": [
+    {
+      "model_id": "claude-opus-4-7",
+      "provider": "anthropic",
+      "generation": "opus-4.7",
+      "input_per_mtok_usd": 15.0,
+      "output_per_mtok_usd": 75.0,
+      "thinking_per_mtok_usd": 75.0,
+      "cache_read_per_mtok_usd": 1.5,
+      "cache_write_per_mtok_usd": 18.75,
+      "batch_discount": 0.5,
+      "tokenizer_correction": 1.35,
+      "notes": "Opus 4.7, 1M context. ~35% token overhead vs Opus 4.6 when counted with pre-4.7 tokenizer libraries."
+    },
+    {
+      "model_id": "claude-opus-4-6",
+      "provider": "anthropic",
+      "generation": "opus-4.6",
+      "input_per_mtok_usd": 15.0,
+      "output_per_mtok_usd": 75.0,
+      "thinking_per_mtok_usd": 75.0,
+      "cache_read_per_mtok_usd": 1.5,
+      "cache_write_per_mtok_usd": 18.75,
+      "batch_discount": 0.5,
+      "tokenizer_correction": 1.0,
+      "notes": "Opus 4.6, 200k context default."
+    },
+    {
+      "model_id": "claude-sonnet-4-6",
+      "provider": "anthropic",
+      "generation": "sonnet-4.6",
+      "input_per_mtok_usd": 3.0,
+      "output_per_mtok_usd": 15.0,
+      "thinking_per_mtok_usd": 15.0,
+      "cache_read_per_mtok_usd": 0.3,
+      "cache_write_per_mtok_usd": 3.75,
+      "batch_discount": 0.5,
+      "tokenizer_correction": 1.0,
+      "notes": "Sonnet 4.6, 200k context."
+    },
+    {
+      "model_id": "claude-haiku-4-5",
+      "provider": "anthropic",
+      "generation": "haiku-4.5",
+      "input_per_mtok_usd": 0.8,
+      "output_per_mtok_usd": 4.0,
+      "thinking_per_mtok_usd": 4.0,
+      "cache_read_per_mtok_usd": 0.08,
+      "cache_write_per_mtok_usd": 1.0,
+      "batch_discount": 0.5,
+      "tokenizer_correction": 1.0,
+      "notes": "Haiku 4.5, 200k context."
+    },
+    {
+      "model_id": "claude-haiku-4-5-20251001",
+      "provider": "anthropic",
+      "generation": "haiku-4.5",
+      "input_per_mtok_usd": 0.8,
+      "output_per_mtok_usd": 4.0,
+      "thinking_per_mtok_usd": 4.0,
+      "cache_read_per_mtok_usd": 0.08,
+      "cache_write_per_mtok_usd": 1.0,
+      "batch_discount": 0.5,
+      "tokenizer_correction": 1.0,
+      "notes": "Haiku 4.5 dated alias."
+    }
+  ]
+}

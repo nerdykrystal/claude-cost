@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "snapshot_date": "2026-04-26",
+  "tokens_per_model": {
+    "claude-opus-4-7": 1228,
+    "claude-opus-4-6": 1228,
+    "claude-sonnet-4-6": 1228,
+    "claude-haiku-4-5": 1228,
+    "claude-haiku-4-5-20251001": 1228
+  }
+}

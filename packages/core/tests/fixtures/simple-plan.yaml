@@ -1,0 +1,9 @@
+plan_id: simple-haiku-001
+plan_name: Simple Haiku build
+description: Single-stage Haiku build for baseline.
+stages:
+  - id: s01
+    name: Feature implementation
+    model: claude-haiku-4-5
+    input_tokens: 10000
+    output_tokens: 5000

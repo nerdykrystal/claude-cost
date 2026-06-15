@@ -1,0 +1,56 @@
+{
+  "name": "@martinez-methods/claude-cost",
+  "version": "1.0.0",
+  "description": "Core engine + CLI for Claude Cost — estimate D2R pipeline costs",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "claude-cost": "dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./engine": "./dist/engine/index.js",
+    "./parser": "./dist/parser/index.js",
+    "./pricing": "./dist/pricing/index.js",
+    "./pricing/node": "./dist/pricing/node.js",
+    "./logs": "./dist/logs/index.js",
+    "./export": "./dist/export/index.js",
+    "./data/pricing.json": "./data/pricing.json"
+  },
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run tests/unit",
+    "test:property": "vitest run tests/property",
+    "test:integration": "vitest run tests/integration",
+    "test:sentinel": "tsx scripts/sentinel-calibration.ts",
+    "test:all": "npm run test:unit && npm run test:property && npm run test:integration",
+    "check:test-layout": "tsx scripts/check-test-layout.ts",
+    "check:pricing-staleness": "tsx scripts/check-pricing-staleness.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "fast-check": "^3.19.0",
+    "tsx": "^4.7.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

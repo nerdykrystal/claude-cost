@@ -1,0 +1,122 @@
+// Sample TypeScript code for tokenizer testing
+export interface EstimateOptions {
+  pricingDb?: PricingDatabase;
+  asOf?: Date;
+  stalenessDays?: number;
+}
+
+export function estimatePlan(plan: Plan, opts: EstimateOptions = {}): EstimateResult {
+  const plan_id = planId(plan);
+  const db = loadPricing(opts.pricingDb);
+  const asOf = opts.asOf ?? new Date();
+  const stalenessDays = opts.stalenessDays ?? 30;
+  const stale = isStale(db, asOf, stalenessDays);
+
+  const per_stage: StageCost[] = [];
+  const assumptions: string[] = [];
+  let total_expected = 0;
+  let total_best = 0;
+  let total_worst = 0;
+
+  const opusGenerations = new Set<string>();
+
+  for (const stage of plan.stages) {
+    const pricing = getPricing(stage.model, db);
+    if (pricing.generation?.startsWith("opus-")) {
+      opusGenerations.add(pricing.generation);
+    }
+    const effInputTokens = effectiveInputTokens(stage, plan);
+    const cost = estimateStage(stage, pricing, effInputTokens);
+    per_stage.push(cost);
+  }
+
+  // Natural language documentation
+  The Claude Cost estimator v1.0 provides accurate cost estimation for multi-stage LLM plans.
+  It supports tokenizer correction factors per model, batch discounting, cache optimization,
+  and envelope-based retry probability modeling. The system validates plan schemas, detects
+  mixed Opus generations, and tracks pricing staleness. Each stage can specify carry_context_from
+  to route tokens from prior execution, and the ASAE gate enforces governance-compliant retries.
+
+  // JSON configuration example
+  {
+    "model_id": "claude-opus-4-7",
+    "provider": "anthropic",
+    "generation": "opus-4.7",
+    "input_per_mtok_usd": 15.0,
+    "output_per_mtok_usd": 75.0,
+    "cache_read_per_mtok_usd": 1.5,
+    "cache_write_per_mtok_usd": 18.75,
+    "batch_discount": 0.5,
+    "tokenizer_correction": 1.35,
+    "notes": "Opus 4.7, 1M context. ~35% token overhead vs Opus 4.6."
+  }
+
+  // Test data for sentinel corpus
+  const testPlans = [
+    { plan_name: "simple", stages: [{ id: "s1", model: "claude-opus-4-7", input_tokens: 1000 }] },
+    { plan_name: "mixed-opus", stages: [
+      { id: "s1", model: "claude-opus-4-6", input_tokens: 500 },
+      { id: "s2", model: "claude-opus-4-7", input_tokens: 1000 }
+    ]},
+    { plan_name: "with-cache", stages: [
+      { id: "s1", model: "claude-sonnet-4-6", input_tokens: 2000, cache_write_tokens: 1500 }
+    ]}
+  ];
+
+  // Validation and error handling
+  function validatePlan(plan: Plan): void {
+    if (!plan.plan_name) throw new Error("plan_name required");
+    if (!Array.isArray(plan.stages)) throw new Error("stages must be array");
+    for (const stage of plan.stages) {
+      if (!stage.id) throw new Error("stage.id required");
+      if (!stage.model) throw new Error("stage.model required");
+      if (stage.input_tokens < 0) throw new Error("input_tokens must be >= 0");
+    }
+  }
+
+  // Tokenizer correction application
+  function applyCorrection(tokens: number, correction: number): number {
+    return Math.round(tokens * correction);
+  }
+
+  // Cost computation helper
+  function computeCost(tokens: number, rate: number, correction: number): number {
+    const adjusted = applyCorrection(tokens, correction);
+    return (adjusted / 1_000_000) * rate;
+  }
+
+  // Retry envelope modeling
+  function computeEnvelope(subtotal: number, p: number, maxRetries: number): {
+    best_case_usd: number;
+    expected_cost_usd: number;
+    worst_case_usd: number;
+  } {
+    const best = subtotal;
+    const worst = subtotal * (1 + maxRetries);
+    const expected = subtotal * (1 + p * maxRetries / (1 - p + 0.0001));
+    return { best_case_usd: best, expected_cost_usd: expected, worst_case_usd: worst };
+  }
+
+  // Batch processing implementation
+  function processBatch(stages: Stage[], pricing: Record<string, ModelPricing>): StageCost[] {
+    return stages.map(stage => {
+      const p = pricing[stage.model];
+      const batchFactor = stage.batch ? 1 - p.batch_discount : 1;
+      const correction = p.tokenizer_correction;
+      const input = stage.input_tokens * correction * batchFactor * p.input_per_mtok_usd / 1_000_000;
+      return { stage_id: stage.id, input_cost_usd: input } as StageCost;
+    });
+  }
+
+  // Assertions and test helpers
+  const assert = {
+    equal: (a: any, b: any) => { if (a !== b) throw new Error(`Expected ${b}, got ${a}`); },
+    exists: (x: any) => { if (!x) throw new Error("Expected value to exist"); },
+    isArray: (x: any) => { if (!Array.isArray(x)) throw new Error("Expected array"); },
+  };
+
+  // Summary and reporting
+  The sentinel calibration detects tokenizer drift by comparing the actual token count
+  of a fixed corpus against the baseline snapshot. Drift greater than 5% triggers a CI failure
+  with exit code 3. Warnings are issued for drift between 2-5%. The baseline is initialized
+  on first run and persisted to detect future tokenizer changes in Anthropic's implementations.

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claude Cost — D2R pipeline cost estimator</title>
+    <meta name="description" content="Estimate and analyze costs for multi-model AI pipelines (D2R plans)." />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    <header>
+      <h1>Claude Cost</h1>
+      <p class="tagline">Estimate and analyze multi-model AI pipeline costs. All computation runs locally in your browser.</p>
+      <p id="pricing-status" role="status" aria-live="polite"></p>
+    </header>
+    <main id="main">
+      <section aria-labelledby="estimate-heading">
+        <h2 id="estimate-heading">Estimate a plan</h2>
+        <label for="plan-input">Paste a D2R plan (YAML, JSON, or Markdown with a fenced code block):</label>
+        <textarea id="plan-input" rows="12" aria-describedby="plan-help" spellcheck="false"></textarea>
+        <p id="plan-help" class="help">
+          The plan must include <code>plan_id</code>, <code>plan_name</code>, and a <code>stages</code> list.
+          Each stage needs <code>id</code>, <code>name</code>, <code>model</code>, <code>input_tokens</code>, <code>output_tokens</code>.
+        </p>
+        <div class="toolbar">
+          <button type="button" id="btn-load-sample">Load sample D2R plan</button>
+          <button type="button" id="btn-estimate">Estimate cost</button>
+          <button type="button" id="btn-export-json">Export JSON</button>
+          <button type="button" id="btn-export-csv">Export CSV</button>
+          <button type="button" id="btn-export-md">Export Markdown</button>
+        </div>
+        <div id="estimate-errors" role="alert" aria-live="assertive" class="errors"></div>
+        <div id="estimate-results" aria-live="polite"></div>
+      </section>
+
+      <section aria-labelledby="compare-heading">
+        <h2 id="compare-heading">Compare multiple plans</h2>
+        <label for="plans-input">Paste 2+ plans as a YAML multi-document stream (separated by <code>---</code>) or a JSON array:</label>
+        <textarea id="plans-input" rows="10" spellcheck="false"></textarea>
+        <div class="toolbar">
+          <button type="button" id="btn-compare">Compare</button>
+          <button type="button" id="btn-compare-export-md">Export comparison as Markdown</button>
+        </div>
+        <div id="compare-errors" role="alert" aria-live="assertive" class="errors"></div>
+        <div id="compare-results" aria-live="polite"></div>
+      </section>
+
+      <section aria-labelledby="variance-heading">
+        <h2 id="variance-heading">Post-run variance analysis</h2>
+        <label for="variance-plan-input">Original plan (YAML/JSON):</label>
+        <textarea id="variance-plan-input" rows="8" spellcheck="false"></textarea>
+        <label for="variance-log-input">Execution log (JSON):</label>
+        <textarea id="variance-log-input" rows="8" spellcheck="false"></textarea>
+        <div class="toolbar">
+          <button type="button" id="btn-variance">Analyze variance</button>
+        </div>
+        <div id="variance-errors" role="alert" aria-live="assertive" class="errors"></div>
+        <div id="variance-results" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer>
+      <p>
+        Claude Cost MVP v1.0 — Martinez Methods. Open source.
+        <a href="https://www.anthropic.com/pricing" rel="noopener">Anthropic pricing reference</a>.
+      </p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

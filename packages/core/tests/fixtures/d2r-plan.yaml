@@ -1,0 +1,57 @@
+plan_id: d2r-mixed-001
+plan_name: D2R mixed-model plan with ASAE gates
+description: Opus plans, Sonnet scaffolds, Haiku implements, with ASAE convergence loops.
+stages:
+  - id: stage-00
+    name: Research
+    model: claude-opus-4-7
+    input_tokens: 20000
+    output_tokens: 8000
+    thinking_tokens: 2000
+    asae_gate: true
+    retry_probability: 0.2
+    max_retries: 2
+  - id: stage-01a
+    name: Skeleton authorship
+    model: claude-opus-4-7
+    input_tokens: 15000
+    output_tokens: 6000
+    cache_read_tokens: 10000
+    asae_gate: true
+    retry_probability: 0.2
+    max_retries: 2
+  - id: stage-01b
+    name: Full plan authorship
+    model: claude-opus-4-7
+    input_tokens: 30000
+    output_tokens: 12000
+    cache_read_tokens: 20000
+    cache_write_tokens: 5000
+    asae_gate: true
+    retry_probability: 0.3
+    max_retries: 3
+  - id: stage-02
+    name: Project scaffold
+    model: claude-sonnet-4-6
+    input_tokens: 18000
+    output_tokens: 10000
+    cache_read_tokens: 15000
+    asae_gate: true
+    retry_probability: 0.3
+    max_retries: 3
+  - id: stage-03
+    name: Feature implementation A
+    model: claude-haiku-4-5
+    input_tokens: 25000
+    output_tokens: 15000
+    asae_gate: true
+    retry_probability: 0.3
+    max_retries: 3
+  - id: stage-04
+    name: Feature implementation B
+    model: claude-haiku-4-5
+    input_tokens: 25000
+    output_tokens: 15000
+    asae_gate: true
+    retry_probability: 0.3
+    max_retries: 3

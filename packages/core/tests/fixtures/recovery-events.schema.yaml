@@ -1,0 +1,11 @@
+# recovery_events schema (Two-Axis Commercial Pitch v02 §3)
+# Schema for A21 DRR audit-log markup — populated when F8 reversion + redelegation
+# fires during sub-agent delegation. Written to gate audit log frontmatter; also
+# auto-emitted by CDCC plugin H9 (Recovery Verifier — proposed, not yet built).
+recovery_events:
+  - stage_id: <string>
+    violation_type: <enum: scope_violation | false_attestation | coverage_drop | protected_file_mutation | role_boundary | fabrication>
+    detected_by: <enum: parent_verification | F8_governance | aspect_9 | aspect_12 | hook_tier_X>
+    revert_target: <commit_hash | working_tree_state>
+    redelegation_spec_diff: <description of corrected constraints>
+    recovery_pass: <bool — did the redelegation succeed?>

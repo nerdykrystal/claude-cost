@@ -1,0 +1,20 @@
+{
+  "name": "claude-cost-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Claude Cost MVP v1.0 — estimate and analyze D2R pipeline costs",
+  "workspaces": [
+    "packages/core",
+    "packages/web"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/core",
+    "test": "npm run test --workspace=packages/core",
+    "typecheck": "npm run typecheck --workspace=packages/core",
+    "cli": "node packages/core/dist/cli/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

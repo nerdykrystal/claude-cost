@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - name: Build core (lint proxy until eslint wired in Stage 03+)
+        working-directory: packages/core
+        run: npx tsc --noEmit
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - working-directory: packages/core
+        run: npm run typecheck
+
+  test-unit:
+    name: Test — Unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - working-directory: packages/core
+        run: npm run test:unit
+
+  test-property:
+    name: Test — Property
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - working-directory: packages/core
+        run: npm run test:property
+
+  test-sentinel:
+    name: Test — Sentinel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - working-directory: packages/core
+        run: npm run test:sentinel
+
+  test-integration:
+    name: Test — Integration (placeholder)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - working-directory: packages/core
+        run: npm run test:integration
+
+  audit:
+    name: Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - run: npm audit --audit-level=moderate
+
+  sbom:
+    name: SBOM (CycloneDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm install
+      - run: npx --yes @cyclonedx/cdxgen --output sbom.json --spec-version 1.5 .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+
+  provenance:
+    name: Provenance (placeholder)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Provenance signing placeholder — wire SLSA provenance in Stage 10+"
+
+  signed-tag-gate:
+    name: Signed Tag Gate (placeholder)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Signed tag gate placeholder — enforce GPG-signed tags on release branches in Stage 10+"
