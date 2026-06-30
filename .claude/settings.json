@@ -1,0 +1,4 @@
+{
+  "_comment": "Canonical settings template. Merged into consumer repos during propagation (hooks key only; local permissions preserved). Session-start-pull hook removed — content is direct-placed by propagation, no network-dependent session start needed.",
+  "hooks": {}
+}
